@@ -8,24 +8,39 @@ from sqlalchemy_imageattach.entity import Image, image_attachment
 from uuid import uuid4
 
 
-class Game(Base):
-    __tablename__ = 'game'
+class BaseOrder(Base):
+    __tablename__ = 'baseorder'
     id = Column(
         UUID(as_uuid=True),
         primary_key=True,
         index=True,
         default=uuid4
     )
-    name_eng = Column(
+    name_of_currency_eng = Column(
         String,
         nullable=False,
     )
-    name_ru = Column(
+    server_eng = Column(
         String,
-        nullable=False,
+        nullable=False
     )
-    image = image_attachment("GamePicture")
+    side_eng = Column(
+        String,
+        nullable=False
+    )
     description_eng = Column(
+        String,
+        nullable=False
+    )
+    name_of_currency_ru = Column(
+        String,
+        nullable=False,
+    )
+    server_ru = Column(
+        String,
+        nullable=False
+    )
+    side_ru = Column(
         String,
         nullable=False
     )
@@ -33,13 +48,14 @@ class Game(Base):
         String,
         nullable=False
     )
-    view_amount = Column(BigInteger, default=0)
+    game_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("game.id"),
+    )
+    game = relationship(
+        "Game",
+        back_populates="game"
+    )
 
     def __str__(self) -> str:
         return f"{self.id}"
-
-
-class GamePicture(Base, Image):
-    __tablename__ = 'game_picture'
-    game_id = Column(Integer, ForeignKey('game.id'), primary_key=True)
-    user = relationship('game')

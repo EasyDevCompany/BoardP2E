@@ -1731,6 +1731,18 @@ pymysql = ["pymysql", "pymysql (<1)"]
 sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
+name = "sqlalchemy-imageattach"
+version = "1.1.0"
+description = "SQLAlchemy extension for attaching images to entity objects"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+SQLAlchemy = ">=0.9.0"
+Wand = ">=0.3.0"
+
+[[package]]
 name = "sqlalchemy-stubs"
 version = "0.3"
 description = "SQLAlchemy stubs and mypy plugin"
@@ -1878,6 +1890,18 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "wand"
+version = "0.6.10"
+description = "Ctypes-based simple MagickWand API binding for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+doc = ["Sphinx (>=2.4.1)"]
+test = ["pytest (>=5.3.5)"]
+
+[[package]]
 name = "watchdog"
 version = "2.1.9"
 description = "Filesystem events monitoring"
@@ -1969,7 +1993,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "2d592caf5cd2627ddd032a13a4e4274f81521372f223f873e568b9d64650e407"
+content-hash = "975f4c61418c0f4751f9f1b5749f2647c014fae0be8fdd030e36b50b42f20528"
 
 [metadata.files]
 aio-pika = [
@@ -3589,6 +3613,10 @@ SQLAlchemy = [
     {file = "SQLAlchemy-1.4.41-cp39-cp39-win_amd64.whl", hash = "sha256:f5fa526d027d804b1f85cdda1eb091f70bde6fb7d87892f6dd5a48925bc88898"},
     {file = "SQLAlchemy-1.4.41.tar.gz", hash = "sha256:0292f70d1797e3c54e862e6f30ae474014648bc9c723e14a2fda730adb0a9791"},
 ]
+sqlalchemy-imageattach = [
+    {file = "SQLAlchemy-ImageAttach-1.1.0.tar.gz", hash = "sha256:a9e3d56da889119e2105b3fee660ec259bb3b51be28173efb1ba129a52710ec4"},
+    {file = "SQLAlchemy_ImageAttach-1.1.0-py2.py3-none-any.whl", hash = "sha256:7a143a820767458ad07380a4e405126bba5cfe5b74478f317d4d58e44cdc1df4"},
+]
 sqlalchemy-stubs = [
     {file = "sqlalchemy-stubs-0.3.tar.gz", hash = "sha256:a3318c810697164e8c818aa2d90bac570c1a0e752ced3ec25455b309c0bee8fd"},
     {file = "sqlalchemy_stubs-0.3-py3-none-any.whl", hash = "sha256:ca1250605a39648cc433f5c70cb1a6f9fe0b60bdda4c51e1f9a2ab3651daadc8"},
@@ -3680,6 +3708,10 @@ varint = [
 vine = [
     {file = "vine-5.0.0-py2.py3-none-any.whl", hash = "sha256:4c9dceab6f76ed92105027c49c823800dd33cacce13bdedc5b914e3514b7fb30"},
     {file = "vine-5.0.0.tar.gz", hash = "sha256:7d3b1624a953da82ef63462013bbd271d3eb75751489f9807598e8f340bd637e"},
+]
+wand = [
+    {file = "Wand-0.6.10-py2.py3-none-any.whl", hash = "sha256:ff69eeba36ec243d9a80dec31e738091653dcd01c2668a9c22dc3ff20392596b"},
+    {file = "Wand-0.6.10.tar.gz", hash = "sha256:373f4a7f2866c868c31ce910e1f9b36a92d132640a20068ec17cea3284fedc57"},
 ]
 watchdog = [
     {file = "watchdog-2.1.9-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:a735a990a1095f75ca4f36ea2ef2752c99e6ee997c46b0de507ba40a09bf7330"},
