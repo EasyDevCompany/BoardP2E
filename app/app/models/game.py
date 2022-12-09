@@ -10,6 +10,7 @@ from uuid import uuid4
 
 class Game(Base):
     __tablename__ = 'game'
+
     id = Column(
         UUID(as_uuid=True),
         primary_key=True,
@@ -25,14 +26,8 @@ class Game(Base):
         nullable=False,
     )
     image = image_attachment("GamePicture")
-    description_eng = Column(
-        String,
-        nullable=False
-    )
-    description_ru = Column(
-        String,
-        nullable=False
-    )
+    description_eng = Column(String, nullable=True)
+    description_ru = Column(String, nullable=True)
     view_amount = Column(BigInteger, default=0)
 
     def __str__(self) -> str:

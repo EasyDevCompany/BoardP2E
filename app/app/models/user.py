@@ -29,7 +29,7 @@ class User(Base):
         default=uuid4
     )
     login = Column(
-        String,
+        String(15),
         nullable=False,
     )
     status = Column(Enum(UserStatus))
@@ -41,6 +41,7 @@ class User(Base):
     raiting = Column(Float(precision=1))
     review_amount = Column(Integer)
     image = image_attachment("UserPicture")
+    deals = relationship("Deal")
 
     @validates("email")
     def validate_email(self, key, address):
