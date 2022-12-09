@@ -36,5 +36,5 @@ class Game(Base):
 
 class GamePicture(Base, Image):
     __tablename__ = 'game_picture'
-    game_id = Column(Integer, ForeignKey('game.id'), primary_key=True)
+    game_id = Column(UUID(as_uuid=True), ForeignKey('game.id'), primary_key=True)
     user = relationship('game')

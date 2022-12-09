@@ -52,5 +52,5 @@ class User(Base):
 
 class UserPicture(Base, Image):
     __tablename__ = 'user_picture'
-    user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey('user.id'), primary_key=True)
     user = relationship('user')

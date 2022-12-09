@@ -24,8 +24,13 @@ fileConfig(config.config_file_name)
 from app.db.base import Base  # noqa
 from app.models import *
 from app.core.config import settings
+from app.models.category import Category
 
-target_metadata = Base.metadata
+# target_metadata = Base.metadata
+# User DONE
+# target_metadata = Game.metadata
+
+target_metadata = Category.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

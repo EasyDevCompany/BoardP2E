@@ -17,10 +17,7 @@ class Category(Base):
         default=uuid4
     )
     name_of_currency_eng = Column(String, nullable=False)
-    game_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey("game.id"),
-    )
+    game_id = Column('game_id', UUID(as_uuid=True), ForeignKey('game.id'), primary_key=True)
     game = relationship(
         "Game",
         back_populates="game"
