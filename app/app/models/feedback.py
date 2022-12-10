@@ -6,7 +6,6 @@ from app.db.base import Base
 from sqlalchemy import Column, Integer, Enum, ForeignKey, DateTime, String, BigInteger
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy_imageattach.entity import Image, image_attachment
 
 from uuid import uuid4
 
@@ -21,7 +20,7 @@ class Feedback(Base):
         default=uuid4
     )
     login = Column(String(50), nullable=False,)
-    email = Column(String)
+    email = Column(String(100))
     phone_number = Column(String(50))
     text = Column(
         String(2000),

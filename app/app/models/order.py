@@ -6,7 +6,6 @@ from app.db.base import Base
 from sqlalchemy import Column, Integer, Enum, ForeignKey, DateTime, String, BigInteger
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy_imageattach.entity import Image, image_attachment
 
 from uuid import uuid4
 
@@ -15,14 +14,10 @@ class Order(Base):
     __tablename__ = "order"
 
     class OrderStatus(str, enum.Enum):
-        active_eng = "active"
-        archived_eng = "archived"
-        draft_eng = "draft"
-        deleted_eng = "deleted"
-        active_ru = "активная"
-        archived_ru = "архивированная"
-        draft_ru = "черновая"
-        deleted_ru = "удаленная"
+        active = {"ru": "активная", "eng": "active"}
+        archived = {"ru": "архивированная", "eng": "archived"}
+        draft = {"ru": "черновая", "eng": "draft"}
+        deleted = {"ru": "удаленная", "eng": "deleted"}
 
     id = Column(
         UUID(as_uuid=True),
@@ -52,7 +47,7 @@ class Order(Base):
     )
     author_of_deal = relationship("User", lazy='joined')
     category = relationship("Category", lazy="joined")
-    status = Column(Enum(OrderStatus))
+    status = Column(Enum(OrderStatus), default=OrderStatus.archived)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __str__(self) -> str:
