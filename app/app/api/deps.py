@@ -1,21 +1,13 @@
 from fastapi import Header, Depends, Response, HTTPException
 from dependency_injector.wiring import inject, Provide
 from app.core.containers import Container
-from app.db.session import scope
-from uuid import uuid4
 from functools import wraps
 from app.db.session import scope
 from uuid import uuid4, UUID
-import json
-from urllib.parse import unquote, quote
-import hmac
-import hashlib
-from app.core.config import settings
 
-import hmac
-import hashlib
-from urllib.parse import unquote
-from datetime import datetime
+
+def get_current_user():
+    pass
 
 
 @inject

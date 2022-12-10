@@ -34,7 +34,7 @@ class User(Base):
         nullable=False,
         unique=True
     )
-    status = Column(Enum(UserStatus))
+    status = Column(Enum(UserStatus), default=UserStatus.user_ru)
     email = Column(String)
     balance = Column(BigInteger, default=0)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
@@ -44,14 +44,6 @@ class User(Base):
     raiting = Column(Float(precision=1), default=0)
     review_amount = Column(Integer, default=0)
     image = image_attachment("UserPicture")
-    deals = relationship("Deal")
-
-
-    @validates("email")
-    def validate_email(self, key, address):
-        if "@" not in address:
-            raise ValueError("failed simple email validation")
-        return address
 
 
 class UserPicture(Base, Image):
