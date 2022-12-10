@@ -5,6 +5,8 @@ from app.core.config import settings
 from app.core.containers import Container
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.api_v1.endpoints import user_auth
+from fastapi.staticfiles import StaticFiles
+
 
 
 def create_app():
@@ -23,6 +25,7 @@ def create_app():
     fastapi_app.container = container
 
     fastapi_app.include_router(api.api_router, prefix=settings.API_V1_STR)
+    # fastapi_app.mount("/static", StaticFiles(directory="static"), name="static")
     return fastapi_app
 
 

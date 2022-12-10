@@ -21,3 +21,10 @@ async def login(
 @commit_and_close_session
 async def registration():
     pass
+
+
+@router.post('/registration')
+@inject
+async def my_profile():
+    pass
+
