@@ -25,6 +25,7 @@ class User(Base):
         index=True,
         default=uuid4
     )
+    token = Column(String)
     login = Column(
         String(15),
         nullable=False,
