@@ -60,6 +60,8 @@ class AuthorizationService(RegistrationService):
 
     async def authorization(self, user: AuthUserIn):
         users_login = self._repository_user.get(login=user.login)
+        print(f"{users_login}")
+        print("s")
         # TODO изменить ошибку
         if users_login is None:
             return ValueError("Такого логина не существует!")
