@@ -24,8 +24,8 @@ fileConfig(config.config_file_name)
 from app.db.base import Base  # noqa
 from app.models import *
 from app.core.config import settings
-from app.models.user import User, UserPicture
-from app.models.game import Game, GamePicture
+from app.models.user import User
+from app.models.game import Game
 from app.models.category import Category
 from app.models.deals import Deal
 from app.models.feedback import Feedback
@@ -34,9 +34,7 @@ from app.models.review import Review
 from app.models.subfields_order import SubFieldOrder
 
 target_metadata = User.metadata
-target_metadata = UserPicture.metadata
 target_metadata = Game.metadata
-target_metadata = GamePicture.metadata
 target_metadata = Category.metadata
 target_metadata = Deal.metadata
 target_metadata = Feedback.metadata
