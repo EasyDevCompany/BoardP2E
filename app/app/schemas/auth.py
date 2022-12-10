@@ -24,8 +24,5 @@ class RegUserIn(BaseModel):
         return v
 
 
-class AuthUserIn(BaseModel):
+class AuthOut(BaseModel):
     login: str
-    password: str
-
-
