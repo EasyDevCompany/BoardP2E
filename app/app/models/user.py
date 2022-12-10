@@ -14,7 +14,7 @@ from uuid import uuid4
 class User(Base):
     __tablename__ = 'user'
 
-    class UserStatus(enum.Enum):
+    class UserStatus(str, enum.Enum):
         user_eng = "user"
         moderator_eng = "moderator"
         admin_eng = "admin"
@@ -38,8 +38,8 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     # TODO Сделать хэш паролей
     password = Column(String(30))
-    raiting = Column(Float(precision=1))
-    review_amount = Column(Integer)
+    raiting = Column(Float(precision=1), default=0)
+    review_amount = Column(Integer, default=0)
     image = image_attachment("UserPicture")
     deals = relationship("Deal")
 

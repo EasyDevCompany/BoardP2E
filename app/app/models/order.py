@@ -14,7 +14,7 @@ from uuid import uuid4
 class Order(Base):
     __tablename__ = "order"
 
-    class DealStatus(enum.Enum):
+    class OrderStatus(enum.Enum):
         active_eng = "active"
         archived_eng = "archived"
         draft_eng = "draft"
@@ -52,7 +52,7 @@ class Order(Base):
     )
     author_of_deal = relationship("User", lazy='joined')
     category = relationship("Category", lazy="joined")
-    status = Column(Enum(DealStatus))
+    status = Column(Enum(OrderStatus))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __str__(self) -> str:
