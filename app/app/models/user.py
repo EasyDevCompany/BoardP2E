@@ -34,7 +34,7 @@ class User(Base):
     )
     status = Column(Enum(UserStatus))
     email = Column(String)
-    balance = Column(BigInteger)
+    balance = Column(BigInteger, default=0)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     # TODO Сделать хэш паролей
     password = Column(String(30))

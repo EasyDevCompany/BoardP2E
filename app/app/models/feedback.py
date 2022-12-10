@@ -20,9 +20,9 @@ class Feedback(Base):
         index=True,
         default=uuid4
     )
-    login = Column(String(15), nullable=False,)
+    login = Column(String(50), nullable=False,)
     email = Column(String)
-    phone_number = Column(String(12))
+    phone_number = Column(String(50))
     text = Column(
         String(2000),
         nullable=True

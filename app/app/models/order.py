@@ -14,7 +14,7 @@ from uuid import uuid4
 class Order(Base):
     __tablename__ = "order"
 
-    class OrderStatus(enum.Enum):
+    class OrderStatus(str, enum.Enum):
         active_eng = "active"
         archived_eng = "archived"
         draft_eng = "draft"
