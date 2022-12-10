@@ -63,7 +63,7 @@ class AuthorizationService(RegistrationService):
         # TODO изменить ошибку
         if users_login is None:
             return ValueError("Такого логина не существует!")
-
+        print("hello")
         if not hmac.compare_digest(
             users_login.password,
             hashlib.pbkdf2_hmac(
