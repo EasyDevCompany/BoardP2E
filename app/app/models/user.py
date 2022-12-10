@@ -41,13 +41,3 @@ class User(Base):
     review_amount = Column(Integer, default=0)
     image_name = Column(String, nullable=True)
 
-
-class UserToken(Base):
-    __tablename__ = 'user_token'
-
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('user.id'), primary_key=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-
-
-
