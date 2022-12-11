@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.api_v1.endpoints import user_auth
 
 
+
 def create_app():
     container = Container()
     container.wire(modules=[deps, user_auth])

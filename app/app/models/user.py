@@ -25,6 +25,7 @@ class User(Base):
         index=True,
         default=uuid4
     )
+    token = Column(String)
     login = Column(
         String(15),
         nullable=False,
@@ -35,8 +36,8 @@ class User(Base):
     balance = Column(BigInteger, default=0)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     # TODO Сделать хэш паролей
-    password = Column(HexByteString)
-    salt = Column(HexByteString)
+    password = Column(String)
+    secret_key = Column(String)
     raiting = Column(Float(precision=1), default=0)
     review_amount = Column(Integer, default=0)
     image_name = Column(String, nullable=True)
