@@ -26,3 +26,11 @@ class RegUserIn(BaseModel):
 
 class AuthOut(BaseModel):
     login: str
+
+
+class MyProfileOut(BaseModel):
+    status: dict[str, str]
+    login: str
+    email: str
+    balance: str
+    image: str
