@@ -40,5 +40,4 @@ class User(Base):
     secret_key = Column(String)
     raiting = Column(Float(precision=1), default=0)
     review_amount = Column(Integer, default=0)
-    image_name = Column(String, nullable=True)
 

@@ -53,5 +53,4 @@ class RegistrationService:
         return self._repository_user.create(obj_in=obj_in)
 
     async def my_profile(self, user_id):
-        user = self._repository_user.get(id=user_id)
-        # image = 
+        return self._repository_user.get(id=user_id)
