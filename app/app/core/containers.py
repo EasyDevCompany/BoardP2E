@@ -10,7 +10,7 @@ from app.models.user import User
 
 from app.repository.user import RepositoryUser
 
-from app.services.auth import RegistrationService
+from app.services.auth import AuthService
 
 
 from app import redis
@@ -63,8 +63,8 @@ class Container(containers.DeclarativeContainer):
 
     repository_user = providers.Singleton(RepositoryUser, model=User, session=db)
 
-    registration_service = providers.Singleton(
-        RegistrationService,
+    auth_service = providers.Singleton(
+        AuthService,
         repository_user=repository_user
     )
 

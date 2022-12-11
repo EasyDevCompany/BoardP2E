@@ -1,57 +1,39 @@
-import hashlib
-import hmac
-import secrets
-
-from loguru import logger
-from fastapi import Header, Depends, Response, HTTPException, status
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from jose import JWTError, jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from dependency_injector.wiring import inject, Provide
 from app.core.containers import Container
 from functools import wraps
 from app.db.session import scope
-from uuid import uuid4, UUID
+from uuid import uuid4
+from app.core.config import settings
 
-from app.repository.user import RepositoryUser
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
-security = HTTPBasic()
+SECRET_KEY = settings.SECRET_KEY
 
 
 @inject
-def get_current_user_auth(
-        credentials: HTTPBasicCredentials = Depends(security),
-        rep_user: RepositoryUser = Depends(Provide[Container.repository_user])
-
+async def get_current_user(
+        token: str = Depends(oauth2_scheme),
+        rep_user=Depends(Provide[Container.repository_user])
 ):
-    current_username_bytes = credentials.username
-    logger.info(f"{current_username_bytes}")
-    current_password_bytes = credentials.password
-    logger.info(f"{current_password_bytes}")
-    user = rep_user.get(login=current_username_bytes)
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        username: str = payload.get("login")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user = rep_user.get(login=username)
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Неправильный логин или пароль!",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    hashed_current_password = hashlib.pbkdf2_hmac(
-        hash_name="sha256",
-        password=current_password_bytes,
-        salt=user.salt,
-        iterations=100_000
-    )
-    is_correct_username = secrets.compare_digest(
-        user.login, current_username_bytes
-    )
-    is_correct_password = hmac.compare_digest(
-        user.password, hashed_current_password
-    )
-    if not (is_correct_password and is_correct_username):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Неправильный логин или пароль!",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    return credentials.username
+        raise credentials_exception
+    return user
 
 
 @inject

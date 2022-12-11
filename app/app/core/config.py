@@ -50,11 +50,12 @@ class Settings(BaseSettings):
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 
-    REDIS_PORT:str
+    REDIS_PORT: str
     REDIS_HOST: str
     REDIS_DB_BOT: str = "REDIS_DB_BOT"
 
     ROLLBAR_TOKEN: str
+    SECRET_KEY: str
     PYTHON_ENV: EnvEnum = EnvEnum.development
 
     class Config:
