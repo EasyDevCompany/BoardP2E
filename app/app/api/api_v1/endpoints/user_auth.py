@@ -1,29 +1,39 @@
 from fastapi import APIRouter, Depends
-from app.api.deps import commit_and_close_session, get_current_user_auth
+from fastapi.security import OAuth2PasswordRequestForm
+
+from app.api.deps import commit_and_close_session, get_current_user
 from dependency_injector.wiring import inject, Provide
 from app.core.containers import Container
-from app.schemas.auth import AuthOut
+from app.schemas.auth import Token, RegUserIn
 
 router = APIRouter()
 
 
-@router.get('/login', response_model=AuthOut)
+@router.post('/login', response_model=Token)
 @inject
 async def login(
-        user: str = Depends(get_current_user_auth),
-        rep_user=Depends(Provide[Container.repository_user])
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        auth_service=Depends(Provide[Container.auth_service])
 ):
-    return rep_user.get(login=user)
+    return await auth_service.login(form_data=form_data)
 
 
 @router.post('/registration')
 @inject
 @commit_and_close_session
-async def registration():
-    pass
+async def registration(
+        user: RegUserIn,
+        auth_service=Depends(Provide[Container.auth_service])
+):
+    return await auth_service.registration(user=user)
 
 
-@router.post('/registration')
+@router.get('/user')
+async def get_user(current_user=Depends(get_current_user)):
+    return current_user
+
+
+@router.post('/test')
 @inject
 async def my_profile():
     pass
