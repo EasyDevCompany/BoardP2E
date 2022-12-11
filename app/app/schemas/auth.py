@@ -42,4 +42,3 @@ class MyProfileOut(BaseModel):
     login: str
     email: str
     balance: str
-    image: str
