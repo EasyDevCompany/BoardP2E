@@ -7,11 +7,10 @@ from app.core.celery import celery_app
 from app.db.session import SyncSession
 
 from app.models.user import User
-from app.models.user import UserToken
 
-from app.repository.user import RepositoryUser, RepositoryUserToken
+from app.repository.user import RepositoryUser
 
-from app.services.auth import RegistrationService, AuthorizationService, AuthUserInterface
+from app.services.auth import AuthService
 
 
 from app import redis
@@ -63,17 +62,10 @@ class Container(containers.DeclarativeContainer):
     )
 
     repository_user = providers.Singleton(RepositoryUser, model=User, session=db)
-    repository_user_token = providers.Singleton(RepositoryUserToken, model=UserToken, session=db)
 
-    registration_service = providers.Singleton(
-        RegistrationService,
-        repository_user=repository_user,
-        repository_user_token=repository_user_token
-    )
-    authorization_service = providers.Singleton(AuthorizationService)
     auth_service = providers.Singleton(
-        authorization_service=authorization_service,
-        registration_service=registration_service
+        AuthService,
+        repository_user=repository_user
     )
 
 

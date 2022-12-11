@@ -1,92 +1,77 @@
-import hmac
-import os
-import hashlib
-from typing import Tuple
-
-from app.repository.user import RepositoryUser
-from app.repository.user import RepositoryUserToken
+from fastapi import HTTPException, status
+from jose import jwt
+from passlib.context import CryptContext
 from app.models.user import User
+from loguru import logger
+from app.core.config import settings
+from app.schemas.auth import RegUserIn
+from app.repository.user import RepositoryUser
 
-from app.schemas.auth import RegUserIn, AuthUserIn
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-class RegistrationService:
+class AuthService:
+    ALGORITHM = "HS256"
+    SECRET_KEY = settings.SECRET_KEY
 
     def __init__(
             self,
             repository_user: RepositoryUser,
-            repository_user_token: RepositoryUserToken
     ):
         self._repository_user = repository_user
-        self._repository_user_token = repository_user_token
 
-    @staticmethod
-    def _hash_password(password: str) -> Tuple[bytes, bytes]:
-        salt = os.urandom(16)
-        hashed_password = hashlib.pbkdf2_hmac(
-            hash_name='sha256',
-            password=password.encode('utf-8'),
-            salt=salt,
-            iterations=100_000
-        )
+    def create_access_token(self, data: dict):
+        to_encode = data.copy()
+        encoded_jwt = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
 
-        return salt, hashed_password
+        return encoded_jwt
 
-    async def _send_ver_code(self):
-        pass
+    def _get_password_hash(self, password):
+        return pwd_context.hash(password)
 
-    async def registration_user(self, user: RegUserIn):
-        salt, hashed_password = self._hash_password(password=user.password)
+    def verify_password(self, input_password, hashed_password):
+        return pwd_context.verify(input_password, hashed_password)
+
+    async def registration(self, user: RegUserIn):
+        user_login = self._repository_user.get(login=user.login)
+        user_email = self._repository_user.get(email=user.email)
+        if user_email is not None:
+            raise ValueError("Такой email уже зарегистрирован.")
+        if user_login is not None:
+            raise ValueError("Такой логин уже зарегистрирован.")
+        hashed_password = self._get_password_hash(password=user.password)
+        access_token = self.create_access_token(data={"login": user.login})
         obj_in = {
+            "token": access_token,
             "login": user.login,
-            "status": User.UserStatus.user_ru,
             "email": user.email,
             "password": hashed_password,
-            "salt": salt,
+            "secret_key": "secret"
         }
-        # TODO изменить ошибки
-        if self._repository_user.get(email=user.email):
-            raise ValueError("Такой email уже зарегистрирован")
-        if self._repository_user.get("login"):
-            raise ValueError("Такой login уже зарегистрирован!")
-
-        if user.image is not None:
-            obj_in.update({"image": user.image})
-
+        logger.info(obj_in)
         return self._repository_user.create(obj_in=obj_in)
 
-
-class AuthorizationService(RegistrationService):
-
-    async def authorization(self, user: AuthUserIn):
-        users_login = self._repository_user.get(login=user.login)
-        # TODO изменить ошибку
-        if users_login is None:
-            return ValueError("Такого логина не существует!")
-        print("hello")
-        if not hmac.compare_digest(
-            users_login.password,
-            hashlib.pbkdf2_hmac(
-                'sha256',
-                user.login.encode('utf-8'),
-                users_login.salt.encode('utf-8'),
-                users_login.salt,
-                100_000
+    async def login(self, form_data):
+        credentials_exception = HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password",
+                headers={"WWW-Authenticate": "Bearer"},
             )
+        user = self._repository_user.get(login=form_data.username)
+        if not user:
+            raise credentials_exception
+        if not self.verify_password(
+            input_password=form_data.password,
+            hashed_password=user.password
         ):
-            raise ValueError("Неправильный пароль, проверьте!")
+            raise credentials_exception
 
-        return users_login
+        access_token = self.create_access_token(
+            data={"login": user.login}
+        )
+        logger.info(access_token)
+        return {"access_token": access_token, "token_type": "bearer"}
 
-
-class AuthUserInterface:
-
-    def __init__(
-            self,
-            authorization_service: AuthorizationService,
-            registration_service: RegistrationService
-    ):
-        self._authorization_service = authorization_service
-        self._registration_service = registration_service
-
-
+    async def my_profile(self, user_id):
+        user = self._repository_user.get(id=user_id)
+        # image = 

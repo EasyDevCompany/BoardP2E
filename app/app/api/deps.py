@@ -1,13 +1,39 @@
-from fastapi import Header, Depends, Response, HTTPException
+from jose import JWTError, jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from dependency_injector.wiring import inject, Provide
 from app.core.containers import Container
 from functools import wraps
 from app.db.session import scope
-from uuid import uuid4, UUID
+from uuid import uuid4
+from app.core.config import settings
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+
+SECRET_KEY = settings.SECRET_KEY
 
 
-def get_current_user():
-    pass
+@inject
+async def get_current_user(
+        token: str = Depends(oauth2_scheme),
+        rep_user=Depends(Provide[Container.repository_user])
+):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        username: str = payload.get("login")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user = rep_user.get(login=username)
+    if user is None:
+        raise credentials_exception
+    return user
 
 
 @inject
@@ -23,7 +49,7 @@ def commit_and_close_session(func):
     async def wrapper(db=Depends(Provide[Container.db]), *args, **kwargs,):
         scope.set(str(uuid4()))
         try:
-            result =  await func(*args, **kwargs)
+            result = await func(*args, **kwargs)
             db.session.commit()
             return result
         except Exception as e:

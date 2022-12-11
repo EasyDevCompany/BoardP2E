@@ -4,11 +4,13 @@ from fastapi import FastAPI, Response
 from app.core.config import settings
 from app.core.containers import Container
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.api_v1.endpoints import user_auth
+
 
 
 def create_app():
     container = Container()
-    container.wire(modules=[deps, api])
+    container.wire(modules=[deps, user_auth])
     fastapi_app = FastAPI(
         title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
     )
@@ -23,5 +25,6 @@ def create_app():
 
     fastapi_app.include_router(api.api_router, prefix=settings.API_V1_STR)
     return fastapi_app
+
 
 app = create_app()
