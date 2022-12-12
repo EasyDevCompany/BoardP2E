@@ -4,14 +4,14 @@ from fastapi import FastAPI, Response
 from app.core.config import settings
 from app.core.containers import Container
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.api_v1.endpoints import user_auth
+from app.api.api_v1.endpoints import user_auth, user
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
 
 def create_app():
     container = Container()
-    container.wire(modules=[deps, user_auth])
+    container.wire(modules=[deps, user_auth, user])
     fastapi_app = FastAPI(
         title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
     )

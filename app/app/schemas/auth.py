@@ -36,8 +36,14 @@ class User(BaseModel):
     # image: str
 
 
+class ChangeIn(BaseModel):
+    old_password: str
+    new_password: str
+    new_password_confirm: str
+
+
 class MyProfileOut(BaseModel):
     # status: dict[str, str]
-    login: str
+    email: str
     # email: str
     # balance: str
