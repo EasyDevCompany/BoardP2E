@@ -72,6 +72,5 @@ class AuthService:
         logger.info(access_token)
         return {"access_token": access_token, "token_type": "bearer"}
 
-    async def my_profile(self, user_id):
-        user = self._repository_user.get(id=user_id)
-        # image = 
+    # async def my_profile(self, user_id):
+        # return self._repository_user.get(id=user_id)

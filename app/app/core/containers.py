@@ -11,6 +11,7 @@ from app.models.user import User
 from app.repository.user import RepositoryUser
 
 from app.services.auth import AuthService
+from app.services.user import UserService
 
 
 from app import redis
@@ -65,6 +66,10 @@ class Container(containers.DeclarativeContainer):
 
     auth_service = providers.Singleton(
         AuthService,
+        repository_user=repository_user
+    )
+    user_service = providers.Singleton(
+        UserService,
         repository_user=repository_user
     )
 

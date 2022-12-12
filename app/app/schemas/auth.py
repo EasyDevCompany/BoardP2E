@@ -6,7 +6,6 @@ class RegUserIn(BaseModel):
     email: str
     login: str
     password: str
-    image: bytes or None
 
     @validator("password")
     def validate_password(cls, v):
@@ -34,12 +33,11 @@ class User(BaseModel):
     login: str
     email: str
     balance: str
-    image: str
+    # image: str
 
 
 class MyProfileOut(BaseModel):
-    status: dict[str, str]
+    # status: dict[str, str]
     login: str
-    email: str
-    balance: str
-    image: str
+    # email: str
+    # balance: str
