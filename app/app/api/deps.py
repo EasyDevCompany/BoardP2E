@@ -25,12 +25,12 @@ async def get_current_user(
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        username: str = payload.get("login")
+        username: str = payload.get("email")
         if username is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = rep_user.get(login=username)
+    user = rep_user.get(email=username)
     if user is None:
         raise credentials_exception
     return user
