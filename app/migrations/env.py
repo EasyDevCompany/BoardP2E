@@ -33,14 +33,15 @@ from app.models.order import Order
 from app.models.review import Review
 from app.models.subfields_order import SubFieldOrder
 
-target_metadata = User.metadata
-target_metadata = Game.metadata
-target_metadata = Category.metadata
-target_metadata = Deal.metadata
-target_metadata = Feedback.metadata
-target_metadata = Order.metadata
-target_metadata = SubFieldOrder.metadata
-target_metadata = Review.metadata
+# target_metadata = User.metadata
+# target_metadata = Game.metadata
+# target_metadata = Category.metadata
+# target_metadata = Deal.metadata
+# target_metadata = Feedback.metadata
+# target_metadata = Order.metadata
+# target_metadata = SubFieldOrder.metadata
+# target_metadata = Review.metadata
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

@@ -24,7 +24,7 @@ class SubFieldOrder(Base):
         ForeignKey("order.id"),
         index=True
     )
-    order = relationship("Order", lazy='joined')
+    order = relationship("Order", lazy='joined', backref="subfields")
 
     def __str__(self) -> str:
         return f"{self.id}"

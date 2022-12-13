@@ -38,15 +38,15 @@ class Order(Base):
     author_of_deal_id = Column(
         UUID(as_uuid=True),
         ForeignKey("user.id"),
-        index=True
+        primary_key=True
     )
-    category = Column(
+    category_id = Column(
         UUID(as_uuid=True),
         ForeignKey("category.id"),
-        index=True
+        primary_key=True
     )
     author_of_deal = relationship("User", lazy='joined')
-    category = relationship("Category", lazy="joined")
+    category = relationship("Category", lazy="joined", foreign_keys=[category_id])
     status = Column(Enum(OrderStatus), default=OrderStatus.archived)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 

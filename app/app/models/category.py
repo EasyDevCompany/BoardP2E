@@ -9,6 +9,7 @@ from uuid import uuid4
 
 class Category(Base):
     __tablename__ = 'category'
+
     id = Column(
         UUID(as_uuid=True),
         primary_key=True,

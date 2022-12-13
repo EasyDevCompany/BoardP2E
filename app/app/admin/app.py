@@ -8,8 +8,10 @@ from app.db.session import SyncSession, scope
 from app.core.config import settings
 
 from app.admin.views.user import UserView
+from app.admin.views.order import OrderView
 
 from app.models.user import User
+from app.models.order import Order
 
 session = SyncSession(settings.SYNC_SQLALCHEMY_DATABASE_URI)
 
@@ -57,6 +59,7 @@ admin = Admin(secureApp, name='Admin', base_template='my_master.html', template_
 # Create a ModelView to add to our administrative interface
 
 admin.add_view(UserView(User, session.session))
+admin.add_view(OrderView(Order, session.session))
 
 # Add administrative views to Flask-Admin
 
