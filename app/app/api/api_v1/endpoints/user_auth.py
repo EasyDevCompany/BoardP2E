@@ -29,7 +29,6 @@ async def registration(
     return await auth_service.registration(user=user)
 
 
-
 # @router.post('/profile', response_model=MyProfileOut)
 # @inject
 # async def my_profile(
