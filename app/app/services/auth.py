@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 from app.models.user import User
 from loguru import logger
 from app.core.config import settings
-from app.schemas.auth import RegUserIn
+from app.schemas.auth import RegUserIn, ChangeIn
 from app.repository.user import RepositoryUser
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -57,7 +57,7 @@ class AuthService:
                 detail="Incorrect username or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        user = self._repository_user.get(login=form_data.username)
+        user = self._repository_user.get(email=form_data.username)
         if not user:
             raise credentials_exception
         if not self.verify_password(
@@ -67,11 +67,17 @@ class AuthService:
             raise credentials_exception
 
         access_token = self.create_access_token(
-            data={"login": user.login}
+            data={"email": user.email}
         )
         logger.info(access_token)
         return {"access_token": access_token, "token_type": "bearer"}
 
-    async def my_profile(self, user_id):
-        user = self._repository_user.get(id=user_id)
-        # image = 
+    async def change_password(self, passwords: ChangeIn, user):
+        if not self.verify_password(passwords.old_password, user.password):
+            raise ValueError("Старый пароль неправильный!")
+        if passwords.new_password != passwords.new_password_confirm:
+            raise ValueError("Новые пароли не совпадают!")
+        return self._repository_user.update(
+            db_obj=user,
+            obj_in={"password": self._get_password_hash(password=passwords.new_password)}
+        )

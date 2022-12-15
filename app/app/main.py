@@ -4,13 +4,14 @@ from fastapi import FastAPI, Response
 from app.core.config import settings
 from app.core.containers import Container
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.api_v1.endpoints import user_auth
-
+from app.api.api_v1.endpoints import user_auth, user
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 
 def create_app():
     container = Container()
-    container.wire(modules=[deps, user_auth])
+    container.wire(modules=[deps, user_auth, user])
     fastapi_app = FastAPI(
         title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
     )
@@ -22,7 +23,12 @@ def create_app():
         allow_headers=["*"],  # Allows all headers
     )
     fastapi_app.container = container
-
+    current_file = Path(__file__)
+    current_file_dir = current_file.parent
+    project_root = current_file_dir.parent
+    project_root_absolute = project_root.resolve()
+    static_root_absolute = project_root_absolute / "image"
+    fastapi_app.mount("/image", StaticFiles(directory=static_root_absolute), name="image")
     fastapi_app.include_router(api.api_router, prefix=settings.API_V1_STR)
     return fastapi_app
 
