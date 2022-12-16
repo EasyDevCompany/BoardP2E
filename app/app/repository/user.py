@@ -3,6 +3,7 @@ from app.models.user import User
 
 
 class RepositoryUser(RepositoryBase[User]):
-    pass
+    def get_buyer(self):
+        pass
 
 
