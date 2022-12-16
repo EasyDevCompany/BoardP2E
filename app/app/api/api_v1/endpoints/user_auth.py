@@ -44,3 +44,12 @@ async def my_profile(
 async def get_post():
     return {"Hello world": "Hello world!"}
 
+
+@router.app
+@inject
+async def get_user(user=Depends(get_current_user)):
+    if get_current_user is None:
+        raise ValueError("Нет нужного пользователя.")
+    return get_current_user.id
+
+
